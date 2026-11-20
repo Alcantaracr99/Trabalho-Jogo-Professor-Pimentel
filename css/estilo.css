@@ -86,3 +86,16 @@ h1.titulo.perigo {
    border: 1px solid #5c6f8f; border-radius: 6px; padding: 6px 10px; cursor: pointer;
 }
 #btn-som:hover { color: #fff; border-color: var(--azul); }
+
+
+/* Controles móveis nas bordas inferiores */
+#controles-mobile { display:none; position:fixed; inset:auto 0 0; z-index:15; pointer-events:none; padding:0 max(12px, env(safe-area-inset-right)) max(12px, env(safe-area-inset-bottom)); justify-content:space-between; align-items:end; }
+.direcional { display:grid; grid-template-columns:repeat(3,52px); grid-template-rows:repeat(3,48px); gap:2px; pointer-events:none; }
+.controle { pointer-events:auto; touch-action:none; user-select:none; -webkit-user-select:none; border:1.5px solid #65caff; color:white; background:rgba(8,27,66,.67); border-radius:12px; font:bold 18px system-ui; box-shadow:0 0 10px #0077ff44; }
+.controle.pressionado,.controle:active { background:rgba(40,135,255,.88); }
+.cima {grid-column:2;grid-row:1}.esquerda{grid-column:1;grid-row:2}.baixo{grid-column:2;grid-row:3}.direita{grid-column:3;grid-row:2}
+.acoes-mobile { display:flex; flex-direction:column; gap:12px; align-items:end; pointer-events:none; }
+.atirar {width:92px;height:92px;border-radius:50%;font-size:15px;border-color:#ff8181;background:rgba(115,23,45,.65)}
+.pausa-mobile {height:38px;width:82px;font-size:12px}
+@media (pointer:coarse) { #controles-mobile {display:flex} #btn-som {bottom:auto;top:52px;right:12px;font-size:10px} .comandos {display:none} #hud {padding:6px 12px;font-size:clamp(11px,3vw,16px)} }
+@media (pointer:coarse) and (max-height:480px) { .direcional {grid-template-columns:repeat(3,44px);grid-template-rows:repeat(3,40px)} .atirar{width:72px;height:72px;font-size:12px} .pausa-mobile{height:30px} .acoes-mobile{gap:5px} }
