@@ -4,7 +4,7 @@
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
    <title>Vanguarda Estelar</title>
-   <link rel="stylesheet" href="css/estilo.css">
+   <link rel="stylesheet" href="css/estilo.css?v=mobile3">
    <script src="js/animacao.js"></script>
    <script src="js/teclado.js"></script>
    <script src="js/colisor.js"></script>
@@ -226,6 +226,10 @@
          teclado.disparou(ESPACO, ativar ? function() { nave.atirar(); } : null);
       }
       
+      // Exibir controles em telas touch, inclusive quando o navegador emula mouse
+      if (navigator.maxTouchPoints > 0 || "ontouchstart" in window || window.innerWidth <= 900) {
+         document.documentElement.classList.add("modo-mobile");
+      }
       // Controles multitoque para celular, compatíveis com o teclado do jogo
       (function configurarControlesMobile() {
          var controles = document.getElementById('controles-mobile');
