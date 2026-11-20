@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
    <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
    <title>Vanguarda Estelar</title>
    <link rel="stylesheet" href="css/estilo.css">
    <script src="js/animacao.js"></script>
@@ -56,6 +57,18 @@
       <button class="botao secundario" data-acao="menu">MENU</button>
    </div>
 
+   <div id="controles-mobile" aria-label="Controles do jogo para celular">
+      <div class="direcional">
+         <button class="controle cima" data-tecla="38" aria-label="Subir">▲</button>
+         <button class="controle esquerda" data-tecla="37" aria-label="Esquerda">◀</button>
+         <button class="controle baixo" data-tecla="40" aria-label="Descer">▼</button>
+         <button class="controle direita" data-tecla="39" aria-label="Direita">▶</button>
+      </div>
+      <div class="acoes-mobile">
+         <button class="controle atirar" data-tecla="32">ATIRAR</button>
+         <button class="controle pausa-mobile" id="pausa-mobile">PAUSA</button>
+      </div>
+   </div>
    <button id="btn-som" data-acao="som">SOM: LIGADO</button>
 
    <script>
@@ -213,6 +226,44 @@
          teclado.disparou(ESPACO, ativar ? function() { nave.atirar(); } : null);
       }
       
+      // Controles multitoque para celular, compatíveis com o teclado do jogo
+      (function configurarControlesMobile() {
+         var controles = document.getElementById('controles-mobile');
+         var ativos = new Map();
+         function soltar(botao) {
+            var codigo = Number(botao.dataset.tecla);
+            if (!ativos.has(botao)) return;
+            ativos.delete(botao);
+            if (teclado) {
+               teclado.pressionadas[codigo] = false;
+               teclado.disparadas[codigo] = false;
+            }
+            botao.classList.remove('pressionado');
+         }
+         controles.querySelectorAll('[data-tecla]').forEach(function(botao) {
+            botao.addEventListener('pointerdown', function(e) {
+               e.preventDefault();
+               if (!teclado || !estado.esta(Estado.JOGANDO)) return;
+               botao.setPointerCapture(e.pointerId);
+               var codigo = Number(botao.dataset.tecla);
+               ativos.set(botao, e.pointerId);
+               teclado.pressionadas[codigo] = true;
+               botao.classList.add('pressionado');
+               if (teclado.funcoesDisparo[codigo] && !teclado.disparadas[codigo]) {
+                  teclado.disparadas[codigo] = true;
+                  teclado.funcoesDisparo[codigo]();
+               }
+            });
+            ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(function(tipo) {
+               botao.addEventListener(tipo, function(e) { e.preventDefault(); soltar(botao); });
+            });
+         });
+         document.getElementById('pausa-mobile').addEventListener('click', function() {
+            if (estado.esta(Estado.JOGANDO) || estado.esta(Estado.PAUSADO)) teclaPausa();
+         });
+         window.addEventListener('blur', function() { ativos.forEach(function(_, botao) { soltar(botao); }); });
+      })();
+
       // ===== Sons =====
       function tocar(audio) {
          var p = audio.play();
