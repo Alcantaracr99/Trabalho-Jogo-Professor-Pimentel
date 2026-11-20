@@ -99,3 +99,8 @@ h1.titulo.perigo {
 .pausa-mobile {height:38px;width:82px;font-size:12px}
 @media (pointer:coarse) { #controles-mobile {display:flex} #btn-som {bottom:auto;top:52px;right:12px;font-size:10px} .comandos {display:none} #hud {padding:6px 12px;font-size:clamp(11px,3vw,16px)} }
 @media (pointer:coarse) and (max-height:480px) { .direcional {grid-template-columns:repeat(3,44px);grid-template-rows:repeat(3,40px)} .atirar{width:72px;height:72px;font-size:12px} .pausa-mobile{height:30px} .acoes-mobile{gap:5px} }
+
+/* Compatibilidade Android, navegadores embutidos e modo desktop */
+html.modo-mobile #controles-mobile { display:flex !important; visibility:visible; }
+@media (max-width:900px) { #controles-mobile {display:flex !important;visibility:visible} #btn-som{bottom:auto;top:52px;right:12px} }
+@media (max-height:480px) and (max-width:950px) { .direcional {grid-template-columns:repeat(3,44px);grid-template-rows:repeat(3,40px)} .atirar{width:72px;height:72px} }
